@@ -22,12 +22,17 @@ jobs:
 
       - name: Install devkitPro
         run: |
-          wget https://github.com/devkitPro/installer/releases/latest/download/devkitpro-pacman-installer
-          chmod +x devkitpro-pacman-installer
-          sudo ./devkitpro-pacman-installer --no-color
+          wget -O - https://apt.devkitpro.org/install-devkitpro-pacman | sudo bash
+          sudo dkp-pacman -S devkitARM nds-dev --noconfirm
           echo "export DEVKITPRO=/opt/devkitpro" >> $GITHUB_ENV
           echo "export DEVKITARM=/opt/devkitpro/devkitARM" >> $GITHUB_ENV
           echo "export PATH=/opt/devkitpro/devkitARM/bin:/opt/devkitpro/tools/bin:$PATH" >> $GITHUB_ENV
+
+      - name: Verify toolchain
+        run: |
+          arm-none-eabi-gcc --version
+          echo "DEVKITPRO=$DEVKITPRO"
+          echo "DEVKITARM=$DEVKITARM"
 
       - name: Install Nintendo DS toolchain
         run: |
