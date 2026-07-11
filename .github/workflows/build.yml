@@ -1,0 +1,46 @@
+name: Build Forge (Nintendo DS)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+
+      - name: Install devkitPro
+        run: |
+          wget https://github.com/devkitPro/installer/releases/latest/download/devkitpro-pacman-installer
+          chmod +x devkitpro-pacman-installer
+          sudo ./devkitpro-pacman-installer --no-color
+          echo "export DEVKITPRO=/opt/devkitpro" >> $GITHUB_ENV
+          echo "export DEVKITARM=/opt/devkitpro/devkitARM" >> $GITHUB_ENV
+          echo "export PATH=/opt/devkitpro/devkitARM/bin:/opt/devkitpro/tools/bin:$PATH" >> $GITHUB_ENV
+
+      - name: Install Nintendo DS toolchain
+        run: |
+          sudo dkp-pacman -S nds-dev --noconfirm
+
+      - name: Build Forge
+        run: |
+          make clean
+          make
+
+      - name: Upload Forge .nds artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge-nds
+          path: forge.nds
+          if-no-files-found: error
