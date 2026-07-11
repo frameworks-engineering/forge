@@ -18,11 +18,16 @@ jobs:
 
       - name: Install libnds
         run: |
-          sudo dkp-pacman -S nds-dev --noconfirm
+          dkp-pacman -S nds-dev --noconfirm
 
-      - name: Verify installation
+      - name: Set up environment
         run: |
-          ls -la /opt/devkitpro/libnds/include/
+          echo "/opt/devkitpro/devkitARM/bin" >> $GITHUB_PATH
+          echo "DEVKITPRO=/opt/devkitpro" >> $GITHUB_ENV
+          echo "DEVKITARM=/opt/devkitpro/devkitARM" >> $GITHUB_ENV
+
+      - name: Verify toolchain
+        run: |
           arm-none-eabi-gcc --version
 
       - name: Build Forge
