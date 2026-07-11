@@ -146,7 +146,7 @@ $(OUTPUT).elf: $(OFILES)
 # The rule to create the .nds file from the .arm9
 #---------------------------------------------------------------------------------
 %.nds: %.arm9
-	ndstool -c $@ -9 $< -b $(OUTPUT).bmp "Forge;Frameworks Eng."
+	ndstool -c $@ -9 $< -b $(OUTPUT).bmp "FORGE;Made by Frameworks Engineering."
 
 #---------------------------------------------------------------------------------
 # This rule links in binary data with the .bin extension
