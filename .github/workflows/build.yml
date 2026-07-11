@@ -10,33 +10,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: devkitpro/devkitarm
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-
-      - name: Install devkitPro
-        run: |
-          wget -O - https://apt.devkitpro.org/install-devkitpro-pacman | sudo bash
-          sudo dkp-pacman -S devkitARM nds-dev --noconfirm
-          echo "export DEVKITPRO=/opt/devkitpro" >> $GITHUB_ENV
-          echo "export DEVKITARM=/opt/devkitpro/devkitARM" >> $GITHUB_ENV
-          echo "export PATH=/opt/devkitpro/devkitARM/bin:/opt/devkitpro/tools/bin:$PATH" >> $GITHUB_ENV
-
-      - name: Verify toolchain
-        run: |
-          arm-none-eabi-gcc --version
-          echo "DEVKITPRO=$DEVKITPRO"
-          echo "DEVKITARM=$DEVKITARM"
-
-      - name: Install Nintendo DS toolchain
-        run: |
-          sudo dkp-pacman -S nds-dev --noconfirm
 
       - name: Build Forge
         run: |
