@@ -27,11 +27,10 @@ jobs:
           echo "DEVKITPRO=/opt/devkitpro" >> $GITHUB_ENV
           echo "DEVKITARM=/opt/devkitpro/devkitARM" >> $GITHUB_ENV
 
-      - name: Verify toolchain
+      - name: Check libnds headers
         run: |
-          arm-none-eabi-gcc --version
-          echo "DEVKITPRO=$DEVKITPRO"
-          echo "DEVKITARM=$DEVKITARM"
+          find /opt/devkitpro -name calico.h -type f || echo "calico.h not found"
+          ls -la /opt/devkitpro/libnds/include/
 
       - name: Build Forge
         run: |
