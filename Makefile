@@ -3,7 +3,6 @@ ifneq ($(DEVKITPRO),)
 else
     $(error "DEVKITPRO not set. Please install devkitPro and set the environment variable.")
 endif
-
 include $(DEVKITARM)/ds_rules
 
 TARGET := forge
@@ -11,18 +10,14 @@ BUILD := build
 SOURCES := source
 INCLUDES := include
 
-CFILES := $(foreach dir,$(SOURCES),$(wildcard $(dir)/*.c))
-CPPFILES := $(foreach dir,$(SOURCES),$(wildcard $(dir)/*.cpp))
-SFILES := $(foreach dir,$(SOURCES),$(wildcard $(dir)/*.s))
-BINFILES := $(foreach dir,$(DATA),$(wildcard $(dir)/*.*))
+CPPFILES := $(wildcard $(SOURCES)/*.cpp)
+CFILES := $(wildcard $(SOURCES)/*.c)
+SFILES := $(wildcard $(SOURCES)/*.s)
+BINFILES := $(wildcard $(SOURCES)/*.bin)
 
-ARCH := -mthumb -mthumb-interwork -march=armv5te -mtune=arm946e-s
-CFLAGS := -g -O2 -Wall -ffast-math $(ARCH)
-CFLAGS += -I$(LIBNDS)/include
-CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions
-ASFLAGS := -g $(ARCH)
-LDFLAGS := -specs=ds_arm9.specs -g $(ARCH) -Wl,-Map,$(TARGET).map
-
+CFLAGS += -DARM9 -I$(LIBNDS)/include
+CXXFLAGS += -DARM9 -I$(LIBNDS)/include -fno-rtti -fno-exceptions
+LDFLAGS += -L$(LIBNDS)/lib
 LIBS := -lnds9 -lmm9
 
 .PHONY: all clean
