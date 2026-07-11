@@ -16,6 +16,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install libnds
+        run: |
+          sudo dkp-pacman -S nds-dev --noconfirm
+
+      - name: Verify installation
+        run: |
+          ls -la /opt/devkitpro/libnds/include/
+          arm-none-eabi-gcc --version
+
       - name: Build Forge
         run: |
           make clean
