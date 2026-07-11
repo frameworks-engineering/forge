@@ -18,7 +18,7 @@ Developed by **[Frameworks Engineering](https://github.com/frameworks-engineerin
 ## Key Features
 
 ### **Netwarper Browser**
-A lightweight, native browser designed for the DS. Netwarper supports custom pages written in **`.nml`** (Netwarper Markup Language), which are extremely fast and optimized for the DS's limited resources. Community-contributed pages live directly within the system, and the browser includes three distinct profiles for different age groups (Kids, Teens, Pro).
+A lightweight, native browser designed for the DS. Netwarper supports custom pages written in **`.nml`** (Netwarper Markup Language), which are extremely fast and optimized for the DS's limited resources. Community-contributed pages live directly within the system, and the browser includes three distinct profiles for different age groups (Kids, Teens, Classic).
 
 ### **Deep Customization**
 Forge introduces a powerful theming system that allows users to completely change the look and feel of the OS. Themes are defined using **`.nss`** (Netwarper Style Sheets) and can be submitted by the community via Pull Requests.
@@ -59,13 +59,13 @@ forge/
 ├── build/                 # Compiled binaries (.nds, .elf, etc.)
 ├── src/                   # Core source code
 │   ├── kernel/            # OS kernel (boot, memory, process management)
-│   ├── drivers/           # Hardware drivers (display, input, WiFi, audio)
+│   ├── drivers/           # Hardware drivers (display, input, Wi-Fi, audio)
 │   ├── netwarper/         # Browser engine
 │   │   ├── core/          # .nml/.nss/.nps interpreter
 │   │   └── pages/         # Community pages (via PRs)
 │   │       ├── kids/      # Pages for Kids profile
 │   │       ├── teens/     # Pages for Teens profile
-│   │       └── (root)     # Pages for Pro profile (full access)
+│   │       └── (root)     # Pages for Classic profile (full access)
 │   ├── themes/            # Visual themes
 │   │   └── sys/           # System themes (via PRs)
 │   ├── sounds/            # Audio files
