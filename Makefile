@@ -1,16 +1,29 @@
-TARGET := forge
-SOURCES := source
-INCLUDES := include
-GRAPHICS := graphics
-AUDIO := audio
+ifneq ($(DEVKITPRO),)
+    export DEVKITARM ?= $(DEVKITPRO)/devkitARM
+else
+    $(error "DEVKITPRO not set. Please install devkitPro and set the environment variable.")
+endif
 
-export DEVKITPRO ?= /opt/devkitpro
-export DEVKITARM ?= $(DEVKITPRO)/devkitARM
 include $(DEVKITARM)/ds_rules
 
+TARGET := forge
 BUILD := build
-ARM9_SOURCES := $(SOURCES)
-ARM7_SOURCES :=
+SOURCES := source
+INCLUDES := include
+
+CFILES := $(foreach dir,$(SOURCES),$(wildcard $(dir)/*.c))
+CPPFILES := $(foreach dir,$(SOURCES),$(wildcard $(dir)/*.cpp))
+SFILES := $(foreach dir,$(SOURCES),$(wildcard $(dir)/*.s))
+BINFILES := $(foreach dir,$(DATA),$(wildcard $(dir)/*.*))
+
+ARCH := -mthumb -mthumb-interwork -march=armv5te -mtune=arm946e-s
+CFLAGS := -g -O2 -Wall -ffast-math $(ARCH)
+CFLAGS += -I$(LIBNDS)/include
+CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions
+ASFLAGS := -g $(ARCH)
+LDFLAGS := -specs=ds_arm9.specs -g $(ARCH) -Wl,-Map,$(TARGET).map
+
+LIBS := -lnds9 -lmm9
 
 .PHONY: all clean
 
@@ -22,13 +35,9 @@ $(TARGET).nds: $(TARGET).arm9
 $(TARGET).arm9: $(BUILD)/$(TARGET).elf
 	arm-none-eabi-objcopy -O binary $< $@
 
-$(BUILD)/$(TARGET).elf: $(SOURCES)/main.cpp
-	mkdir -p $(BUILD)
-	arm-none-eabi-gcc -mthumb -mthumb-interwork -march=armv5te -mtune=arm946e-s -O2 \
-		-fomit-frame-pointer -ffast-math -I$(DEVKITPRO)/libnds/include \
-		-DARM9 -c $< -o $(BUILD)/main.o
-	arm-none-eabi-gcc -mthumb -mthumb-interwork -march=armv5te -mtune=arm946e-s -O2 \
-		$(BUILD)/main.o -L$(DEVKITPRO)/libnds/lib -lnds9 -o $@
+$(BUILD)/$(TARGET).elf: $(CPPFILES) $(CFILES) $(SFILES)
+	@mkdir -p $(BUILD)
+	$(CXX) $(CXXFLAGS) $(CPPFILES) -o $@ $(LDFLAGS) $(LIBS)
 
 clean:
 	rm -rf $(BUILD) $(TARGET).arm9 $(TARGET).nds
